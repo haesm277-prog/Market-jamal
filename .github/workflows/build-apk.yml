@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -35,9 +35,14 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x android/gradlew
 
+      - name: Show Java version being used
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME"
+          java -version
+
       - name: Build Debug APK
         working-directory: android
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --stacktrace -Dorg.gradle.java.home="$JAVA_HOME"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
