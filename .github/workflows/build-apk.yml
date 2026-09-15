@@ -1,3 +1,4 @@
+
 name: Build Android APK
 
 on:
@@ -30,7 +31,13 @@ jobs:
 
       - name: Sync Capacitor (if applicable)
         run: |
-          if [ -f package.json ]; then npx cap sync android || true; fi
+          if [ -f package.json ]; then npx cap sync android; fi
+
+      - name: Force-copy www into Android assets (safety net)
+        run: |
+          rm -rf android/app/src/main/assets/public
+          mkdir -p android/app/src/main/assets/public
+          cp -r www/* android/app/src/main/assets/public/
 
       - name: Grant execute permission for gradlew
         run: chmod +x android/gradlew
